@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(
         securedEnabled = true,
         jsr250Enabled = true,
-        proxyTargetClass = true
+        prePostEnabled = true
 )
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -62,8 +62,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter() {
-        return  new JWTAuthenticationFilter();
+        return new JWTAuthenticationFilter();
     }
-
-
 }

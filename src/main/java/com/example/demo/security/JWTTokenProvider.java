@@ -9,7 +9,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,7 @@ public class JWTTokenProvider {
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         Date now = new Date(System.currentTimeMillis());
-        Date expireDate = new Date(now.getTime() + SecurityConstants.EXPIRATION_TIME);
+        Date expiryDate = new Date(now.getTime() + SecurityConstants.EXPIRATION_TIME);
 
         String userId = Long.toString(user.getId());
 
@@ -38,7 +37,7 @@ public class JWTTokenProvider {
                 .setSubject(userId)
                 .addClaims(claimsMap)
                 .setIssuedAt(now)
-                .setExpiration(expireDate)
+                .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
                 .compact();
     }
@@ -56,7 +55,8 @@ public class JWTTokenProvider {
                 UnsupportedJwtException |
                 IllegalArgumentException ex) {
             log.error(ex.getMessage());
-            return  false;
+
+            return false;
         }
     }
 
@@ -68,6 +68,6 @@ public class JWTTokenProvider {
 
         String id = (String) claims.get("id");
 
-        return Long.getLong(id);
+        return Long.parseLong(id);
     }
 }
